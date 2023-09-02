@@ -1,0 +1,130 @@
+{
+  "nbformat": 4,
+  "nbformat_minor": 0,
+  "metadata": {
+    "colab": {
+      "provenance": [],
+      "authorship_tag": "ABX9TyNgdXDIvhyAbdPVQ72vTQKy",
+      "include_colab_link": true
+    },
+    "kernelspec": {
+      "name": "python3",
+      "display_name": "Python 3"
+    },
+    "language_info": {
+      "name": "python"
+    }
+  },
+  "cells": [
+    {
+      "cell_type": "markdown",
+      "metadata": {
+        "id": "view-in-github",
+        "colab_type": "text"
+      },
+      "source": [
+        "<a href=\"https://colab.research.google.com/github/mugesh-rao/Market-Models/blob/main/Market\" target=\"_parent\"><img src=\"https://colab.research.google.com/assets/colab-badge.svg\" alt=\"Open In Colab\"/></a>"
+      ]
+    },
+    {
+      "cell_type": "code",
+      "execution_count": null,
+      "metadata": {
+        "id": "QSh4gCTk9uQ_"
+      },
+      "outputs": [],
+      "source": [
+        "import yfinance as yf\n",
+        "from datetime import datetime, timedelta\n",
+        "\n",
+        "# Function to fetch stock information\n",
+        "\n",
+        "\n",
+        "def fetch_stock_info(stock_symbol):\n",
+        "    try:\n",
+        "        # Fetch historical data for the stock\n",
+        "        stock = yf.Ticker(stock_symbol + \".NS\")  # Append \".NS\" for NSE stocks\n",
+        "\n",
+        "        # Calculate the percentage return for 1 day\n",
+        "        end_date_1_day = datetime.now()\n",
+        "        start_date_1_day = end_date_1_day - timedelta(days=1)\n",
+        "        historical_data_1_day = stock.history(\n",
+        "            start=start_date_1_day, end=end_date_1_day)\n",
+        "        start_price_1_day = historical_data_1_day.iloc[0]['Close']\n",
+        "        end_price_1_day = historical_data_1_day.iloc[-1]['Close']\n",
+        "        percentage_return_1_day = (\n",
+        "            (end_price_1_day - start_price_1_day) / start_price_1_day) * 100\n",
+        "\n",
+        "        # Calculate the percentage return for 2 days\n",
+        "        end_date_2_days = datetime.now()\n",
+        "        start_date_2_days = end_date_2_days - timedelta(days=2)\n",
+        "        historical_data_2_days = stock.history(\n",
+        "            start=start_date_2_days, end=end_date_2_days)\n",
+        "        start_price_2_days = historical_data_2_days.iloc[0]['Close']\n",
+        "        end_price_2_days = historical_data_2_days.iloc[-1]['Close']\n",
+        "        percentage_return_2_days = (\n",
+        "            (end_price_2_days - start_price_2_days) / start_price_2_days) * 100\n",
+        "\n",
+        "        # Calculate the percentage return for 1 week (7 days)\n",
+        "        end_date_1_week = datetime.now()\n",
+        "        start_date_1_week = end_date_1_week - timedelta(days=7)\n",
+        "        historical_data_1_week = stock.history(\n",
+        "            start=start_date_1_week, end=end_date_1_week)\n",
+        "        start_price_1_week = historical_data_1_week.iloc[0]['Close']\n",
+        "        end_price_1_week = historical_data_1_week.iloc[-1]['Close']\n",
+        "        percentage_return_1_week = (\n",
+        "            (end_price_1_week - start_price_1_week) / start_price_1_week) * 100\n",
+        "\n",
+        "        # Calculate the percentage return for 10 days\n",
+        "        end_date_10_days = datetime.now()\n",
+        "        start_date_10_days = end_date_10_days - timedelta(days=10)\n",
+        "        historical_data_10_days = stock.history(\n",
+        "            start=start_date_10_days, end=end_date_10_days)\n",
+        "        start_price_10_days = historical_data_10_days.iloc[0]['Close']\n",
+        "        end_price_10_days = historical_data_10_days.iloc[-1]['Close']\n",
+        "        percentage_return_10_days = (\n",
+        "            (end_price_10_days - start_price_10_days) / start_price_10_days) * 100\n",
+        "\n",
+        "        # Calculate the percentage return for 1 month (30 days)\n",
+        "        end_date_1_month = datetime.now()\n",
+        "        start_date_1_month = end_date_1_month - timedelta(days=30)\n",
+        "        historical_data_1_month = stock.history(\n",
+        "            start=start_date_1_month, end=end_date_1_month)\n",
+        "        start_price_1_month = historical_data_1_month.iloc[0]['Close']\n",
+        "        end_price_1_month = historical_data_1_month.iloc[-1]['Close']\n",
+        "        percentage_return_1_month = (\n",
+        "            (end_price_1_month - start_price_1_month) / start_price_1_month) * 100\n",
+        "\n",
+        "        return {\n",
+        "            \"Symbol\": stock_symbol,\n",
+        "            \"Percentage Return (1 Day)\": percentage_return_1_day,\n",
+        "            \"Percentage Return (2 Days)\": percentage_return_2_days,\n",
+        "            \"Percentage Return (1 Week)\": percentage_return_1_week,\n",
+        "            \"Percentage Return (10 Days)\": percentage_return_10_days,\n",
+        "            \"Percentage Return (1 Month)\": percentage_return_1_month\n",
+        "        }\n",
+        "\n",
+        "    except Exception as e:\n",
+        "        return {\"Error\": str(e)}\n",
+        "\n",
+        "# Get user input for the Indian stock symbol\n",
+        "stock_symbol = input(\"Enter the Indian stock symbol (e.g., TATAMOTORS): \")\n",
+        "stock_info = fetch_stock_info(stock_symbol)\n",
+        "if \"Error\" in stock_info:\n",
+        "    print(f\"Error: {stock_info['Error']}\")\n",
+        "else:\n",
+        "    print(f\"Symbol: {stock_info['Symbol']}\")\n",
+        "    print(\n",
+        "        f\"Percentage Return (1 Day): {stock_info['Percentage Return (1 Day)']:.2f}%\")\n",
+        "    print(\n",
+        "        f\"Percentage Return (2 Days): {stock_info['Percentage Return (2 Days)']:.2f}%\")\n",
+        "    print(\n",
+        "        f\"Percentage Return (1 Week): {stock_info['Percentage Return (1 Week)']:.2f}%\")\n",
+        "    print(\n",
+        "        f\"Percentage Return (10 Days): {stock_info['Percentage Return (10 Days)']:.2f}%\")\n",
+        "    print(\n",
+        "        f\"Percentage Return (1 Month): {stock_info['Percentage Return (1 Month)']:.2f}%\")\n"
+      ]
+    }
+  ]
+}
