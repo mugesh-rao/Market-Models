@@ -7,7 +7,17 @@ from datetime import datetime, timedelta
 def fetch_stock_info(stock_symbol):
     try:
         # Fetch historical data for the stock
-        stock = yf.Ticker(stock_symbol)
+        stock = yf.Ticker(stock_symbol + ".NS")  # Append ".NS" for NSE stocks
+
+        # Calculate the percentage return for 1 day
+        end_date_1_day = datetime.now()
+        start_date_1_day = end_date_1_day - timedelta(days=1)
+        historical_data_1_day = stock.history(
+            start=start_date_1_day, end=end_date_1_day)
+        start_price_1_day = historical_data_1_day.iloc[0]['Close']
+        end_price_1_day = historical_data_1_day.iloc[-1]['Close']
+        percentage_return_1_day = (
+            (end_price_1_day - start_price_1_day) / start_price_1_day) * 100
 
         # Calculate the percentage return for 2 days
         end_date_2_days = datetime.now()
@@ -51,6 +61,7 @@ def fetch_stock_info(stock_symbol):
 
         return {
             "Symbol": stock_symbol,
+            "Percentage Return (1 Day)": percentage_return_1_day,
             "Percentage Return (2 Days)": percentage_return_2_days,
             "Percentage Return (1 Week)": percentage_return_1_week,
             "Percentage Return (10 Days)": percentage_return_10_days,
@@ -59,14 +70,16 @@ def fetch_stock_info(stock_symbol):
 
     except Exception as e:
         return {"Error": str(e)}
-# TATAMOTORS.NS
 
-stock_symbol = input("Enter the stock symbol : ")
+# Get user input for the Indian stock symbol
+stock_symbol = input("Enter the Indian stock symbol (e.g., TATAMOTORS): ")
 stock_info = fetch_stock_info(stock_symbol)
 if "Error" in stock_info:
     print(f"Error: {stock_info['Error']}")
 else:
     print(f"Symbol: {stock_info['Symbol']}")
+    print(
+        f"Percentage Return (1 Day): {stock_info['Percentage Return (1 Day)']:.2f}%")
     print(
         f"Percentage Return (2 Days): {stock_info['Percentage Return (2 Days)']:.2f}%")
     print(
